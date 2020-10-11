@@ -13,10 +13,10 @@ T MessageQueue<T>::receive()
 { 
     std::unique_lock<std::mutex> lock(_mutex);
     _condition.wait(lock, [this]{
-        return !pusher.empty();
+        return !_queue.empty();
     });
-    T msg = std::move(pusher.front());
-    pusher.pop_front(); 
+    T msg = std::move(_queue.front());
+    _queue.pop_front(); 
     return msg;
 }
 
@@ -24,8 +24,8 @@ template <typename T>
 void MessageQueue<T>::send(T &&msg)
 {
     std::lock_guard<std::mutex> lock(_mutex);
-    pusher.emplace_back(msg);
-    condition.notify_one();
+    _queue.emplace_back(msg);
+    _condition.notify_one();
 }
 
 /* Implementation of class "TrafficLight" */
@@ -52,7 +52,7 @@ TrafficLightPhase TrafficLight::getCurrentPhase()
 
 void TrafficLight::simulate()
 {
-    threads.emplace_back(std::thread(TrafficLight::cycleThroughPhases, this));
+    threads.emplace_back(std::thread(&TrafficLight::cycleThroughPhases, this));
 }
 // virtual function which is executed in a thread
 void TrafficLight::cycleThroughPhases()

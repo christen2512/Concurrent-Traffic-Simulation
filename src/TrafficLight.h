@@ -13,8 +13,8 @@ template <class T>
 class MessageQueue
 {
 public:
-void send(T &&phase){}
-T receive(){}
+void send(T &&phase);
+T receive();
 
 private:
 std::deque<T> _queue;
@@ -31,17 +31,16 @@ class TrafficLight : TrafficObject
 {
 public:
     // constructor / desctructor
-    TrafficLight(){}
-    ~TrafficLight(){}
+    TrafficLight();
     // getters / setters
     void waitForGreen();
     void simulate();
     // typical behaviour methods
-    TrafficLightPhase getCurrentPhase(){}
+    TrafficLightPhase getCurrentPhase();
 
 private:
     // typical behaviour methods
-    void cycleThroughPhases(){}
+    void cycleThroughPhases();
 
     TrafficLightPhase _currentPhase;
     MessageQueue<TrafficLightPhase> pusher;
